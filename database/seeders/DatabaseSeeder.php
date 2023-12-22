@@ -18,5 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->call(VoyagerDatabaseSeeder::class);
         $this->call(SuperUserSeeder::class);
         $this->call(MenuItemsTableSeeder::class);
+        $this->call(DataRowsTableSeeder::class);
+        $this->call(DataTypesTableSeeder::class);
     }
 }

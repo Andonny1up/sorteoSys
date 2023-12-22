@@ -4,6 +4,9 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
+use TCG\Voyager\Models\Role;
+use TCG\Voyager\Models\User;
 
 class SuperUserSeeder extends Seeder
 {
