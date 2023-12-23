@@ -23,9 +23,10 @@ Route::get('/', function () {
 });
 Route::controller(RaffleController::class)->group(
     function () {
-        Route::get('{raffle}/draw', 'drawGame')->name('raffle.draw');
-        Route::get('raffle/{raffle}/participants', 'getParticipants')->name('raffle.participants');
-        Route::get('raffle/{raffle}/selectRandomParticipant', 'selectRandomParticipant')->name('raffle.selectRandomParticipant');
+        Route::get('raffle/{raffle}/draw', 'drawGame')->name('raffle.draw')->middleware('auth');
+        Route::get('raffle/{raffle}/participants', 'getParticipants')->name('raffle.participants')->middleware('auth');
+        Route::get('raffle/{raffle}/selectRandomParticipant', 'selectRandomParticipant')->name('raffle.selectRandomParticipant')->middleware('auth');
+        Route::get('raffle/{raffle}/participants/selected', 'getParticipantsSelected')->name('raffle.participants.selected')->middleware('auth');
     }
 );
 

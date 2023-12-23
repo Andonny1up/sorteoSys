@@ -14,20 +14,40 @@ class RaffleController extends VoyagerBaseController
     public function drawGame(Raffle $raffle)
     {
         $participants = $raffle->people()->get();
+        $participantsSelected = $raffle->people()->wherePivot('selected', true)->withPivot('status')->get();
         $total_participants = $participants->count();
-        return view('raffle.draw_game', compact(['raffle', 'participants', 'total_participants']));
+        return view('raffle.draw_game', compact(['raffle', 'participants','participantsSelected', 'total_participants']));
     }
     public function getParticipants(Raffle $raffle)
     {
         $participants = $raffle->people()->wherePivot('selected', false)->inRandomOrder()->get();
         return response()->json($participants);
     }
-
-    public function selectRandomParticipant(Raffle $raffle)
+    public function getParticipantsSelected(Raffle $raffle)
     {
-        $participant = $raffle->people()->wherePivot('selected', false)->inRandomOrder()->first();
+        $participantsSelected = $raffle->people()->wherePivot('selected', true)->withPivot('status')->get();
+        return response()->json($participantsSelected);
+    }
+
+    public function selectRandomParticipant(Request $request,Raffle $raffle)
+    {
+        $selectState = $request->input('selectValue');
+        if ($selectState == 1) {
+            $participant = $raffle->people()->wherePivot('selected', false)->wherePivot('is_winner', true)->inRandomOrder()->first();
+            if (!$participant) {
+                $participant = $raffle->people()->wherePivot('selected', false)->inRandomOrder()->first();
+            }else{
+                $raffle->people()->updateExistingPivot($participant->id, ['is_winner' => false]);
+            }
+        }else{
+            $participant = $raffle->people()->wherePivot('selected', false)->inRandomOrder()->first();
+        }
+        
         if ($participant) {
-            $raffle->people()->updateExistingPivot($participant->id, ['selected' => true]);
+            $status = $selectState == 1 ? 'Ganador' : 'Descartado';
+            $raffle->people()->updateExistingPivot($participant->id, ['selected' => true, 'status' => $status]);
+        }else{
+            $participant = null;
         }
         return response()->json($participant);
     }
