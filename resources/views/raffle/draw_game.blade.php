@@ -1,5 +1,5 @@
 @extends('base.base')
-@section('title', 'Sorteo de Juego')
+@section('title', 'AppSorteo')
     
 @section('content')
 <div class="container-fluid pt-5">

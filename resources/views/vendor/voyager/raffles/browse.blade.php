@@ -258,7 +258,7 @@
                                                     @include('voyager::bread.partials.actions', ['action' => $action])
                                                 @endif
                                             @endforeach
-                                            <a href="{{route('raffle.draw',$data->getKey())}}" class="btn btn-primary">Sortear</a>
+                                            <a href="{{route('raffle.draw',$data->getKey())}}" target="_blank" class="btn btn-primary">Sortear</a>
                                         </td>
                                     </tr>
                                     @endforeach
