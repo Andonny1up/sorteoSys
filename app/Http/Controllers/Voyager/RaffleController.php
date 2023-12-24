@@ -51,4 +51,27 @@ class RaffleController extends VoyagerBaseController
         }
         return response()->json($participant);
     }
+
+    //para añadir a todas las personas activas:
+    public function addActivePeopleToRaffle($raffleId)
+    {
+        // Encuentra el sorteo por su ID
+        $raffle = Raffle::find($raffleId);
+
+        if (!$raffle) {
+            // Si el sorteo no existe, redirige o maneja el error como prefieras
+            return redirect()->back()->with('error', 'Raffle not found');
+        }
+
+        // Encuentra todas las personas con 'active' en true
+        $people = Person::where('active', true)->get();
+
+        // Agrega todas las personas al sorteo
+        foreach ($people as $person) {
+            $raffle->people()->syncWithoutDetaching($person->id);
+        }
+
+        // Redirige o maneja el éxito como prefieras
+        return redirect()->back()->with('success', 'Active people added to raffle');
+    }
 }

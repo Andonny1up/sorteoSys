@@ -89,7 +89,7 @@ class DataTypesTableSeeder extends Seeder
                 'policy_name' => NULL,
                 'server_side' => 0,
                 'slug' => 'personas',
-                'updated_at' => '2023-12-22 21:43:50',
+                'updated_at' => '2023-12-24 21:06:49',
             ),
             4 => 
             array (

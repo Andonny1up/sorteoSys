@@ -659,6 +659,22 @@ class DataRowsTableSeeder extends Seeder
                 'required' => 0,
                 'type' => 'relationship',
             ),
+            40 => 
+            array (
+                'add' => 0,
+                'browse' => 0,
+                'data_type_id' => 5,
+                'delete' => 0,
+                'details' => '{}',
+                'display_name' => 'Active',
+                'edit' => 1,
+                'field' => 'active',
+                'id' => 41,
+                'order' => 11,
+                'read' => 0,
+                'required' => 1,
+                'type' => 'checkbox',
+            ),
         ));
         
         

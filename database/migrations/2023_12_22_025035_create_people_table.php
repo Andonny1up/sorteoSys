@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('department')->nullable()->default(null);
             $table->unsignedBigInteger('register_user_id')->nullable()->default(null);
             $table->foreign('register_user_id')->references('id')->on('users')->onDelete('cascade');
+            // $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }
