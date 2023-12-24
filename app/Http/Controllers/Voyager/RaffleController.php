@@ -14,7 +14,7 @@ class RaffleController extends VoyagerBaseController
     public function drawGame(Raffle $raffle)
     {
         $participants = $raffle->people()->get();
-        $participantsSelected = $raffle->people()->wherePivot('selected', true)->withPivot('status')->get();
+        $participantsSelected = $raffle->people()->wherePivot('selected', true)->withPivot('status', 'updated_at')->orderBy('pivot_updated_at', 'desc')->get();
         $total_participants = $participants->count();
         return view('raffle.draw_game', compact(['raffle', 'participants','participantsSelected', 'total_participants']));
     }
@@ -25,7 +25,7 @@ class RaffleController extends VoyagerBaseController
     }
     public function getParticipantsSelected(Raffle $raffle)
     {
-        $participantsSelected = $raffle->people()->wherePivot('selected', true)->withPivot('status')->get();
+        $participantsSelected = $raffle->people()->wherePivot('selected', true)->withPivot('status', 'updated_at')->orderBy('pivot_updated_at', 'desc')->get();
         return response()->json($participantsSelected);
     }
 
@@ -45,7 +45,7 @@ class RaffleController extends VoyagerBaseController
         
         if ($participant) {
             $status = $selectState == 1 ? 'Ganador' : 'Descartado';
-            $raffle->people()->updateExistingPivot($participant->id, ['selected' => true, 'status' => $status]);
+            $raffle->people()->updateExistingPivot($participant->id, ['selected' => true, 'status' => $status,'updated_at' => now()]);
         }else{
             $participant = null;
         }
