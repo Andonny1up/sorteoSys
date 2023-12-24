@@ -23,7 +23,7 @@
                 </div>
                 <div class="card-body">
                     <div id="roulette" class="roulette">
-
+                        ¡SUERTE!
                     </div>
                 </div>
             </div>
@@ -150,7 +150,7 @@
 <script src="{{asset('confetti/confetti.js')}}"></script>
 <script>
     $(document).ready(function() {
-    var raffleId = 1; // Reemplaza esto con el ID de tu sorteo
+    var raffleId = {{$raffle->id}};
     var participants = [];
     var index = 0;
     var intervalId;

@@ -17,8 +17,8 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
         $this->call(VoyagerDatabaseSeeder::class);
         $this->call(SuperUserSeeder::class);
-        $this->call(MenuItemsTableSeeder::class);
-        $this->call(DataRowsTableSeeder::class);
         $this->call(DataTypesTableSeeder::class);
+        $this->call(DataRowsTableSeeder::class);
+        $this->call(MenuItemsTableSeeder::class);
     }
 }
