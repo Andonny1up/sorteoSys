@@ -30,6 +30,9 @@ Route::controller(RaffleController::class)->group(
         
         //para añadir a todas las personas activas:
         Route::post('raffle/{raffle}/addActivePeopleToRaffle', 'addActivePeopleToRaffle')->name('raffle.addActivePeopleToRaffle')->middleware('auth');
+    
+        //para reiniciar el sorteo:
+        Route::post('raffle/{raffle}/resetRaffle', 'resetRaffle')->name('raffle.resetRaffle')->middleware('auth');
     }
 );
 

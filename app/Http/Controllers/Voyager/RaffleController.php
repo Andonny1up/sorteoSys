@@ -74,4 +74,18 @@ class RaffleController extends VoyagerBaseController
         // Redirige o maneja el éxito como prefieras
         return redirect()->back()->with('success', 'Active people added to raffle');
     }
+    
+    public function resetRaffle(Raffle $raffle)
+    {
+        // Encuentra todas las personas del sorteo que tienen 'selected' en true
+        $selectedPeople = $raffle->people()->wherePivot('selected', true)->get();
+
+        // Actualiza 'selected' a false y 'status' a 'none' para cada persona seleccionada
+        foreach ($selectedPeople as $person) {
+            $raffle->people()->updateExistingPivot($person->id, ['selected' => false, 'status' => 'none']);
+        }
+
+        // Redirige o maneja el éxito como prefieras
+        return redirect()->back()->with('success', 'Raffle has been reset');
+    }
 }

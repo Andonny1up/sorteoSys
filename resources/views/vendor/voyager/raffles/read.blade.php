@@ -27,16 +27,28 @@
             <i class="glyphicon glyphicon-list"></i> <span class="hidden-xs hidden-sm">{{ __('voyager::generic.return_to_list') }}</span>
         </a>
         @endcan
+        
+        
+    </h1>
+    <div class="container-fluid" style="margin-bottom: 1rem">
+        {{-- btn agregar todos --}}
         @can('edit', $dataTypeContent)
             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addPeopleModal">
                 <i class="voyager-people"></i> <span class="hidden-xs hidden-sm">Agregar todos</span>
             </button>
         @endcan
-    </h1>
+        {{-- btn reiniciar --}}
+        @can('edit', $dataTypeContent)
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#resetRaffleModal">
+                <i class="glyphicon glyphicon-refresh"></i> <span class="hidden-xs hidden-sm">Reiniciar sorteo</span>
+            </button>
+        @endcan
+    </div>
     @include('voyager::multilingual.language-selector')
 @stop
 
 @section('content')
+    
     <div class="page-content read container-fluid">
         <div class="row">
             <div class="col-md-12">
@@ -170,10 +182,10 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="addPeopleModalLabel">Agregar todas las personas activas</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+              <h4 class="modal-title" id="addPeopleModalLabel">Agregar todas las personas activas</h4>
             </div>
             <form action="{{ route('raffle.addActivePeopleToRaffle', $dataTypeContent->getKey()) }}" method="POST">
               @csrf
@@ -189,8 +201,45 @@
         </div>
       </div>
 
-@stop
+    {{-- modal reiniciar --}}
+    <div class="modal fade" id="resetRaffleModal" tabindex="-1" role="dialog" aria-labelledby="resetRaffleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header modal-danger">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="resetRaffleModalLabel">
+                        <i class="glyphicon glyphicon-refresh"></i>
+                        Reiniciar Sorteo
+                    </h4>
+                </div>
+                <form action="{{ route('raffle.resetRaffle', $dataTypeContent->getKey()) }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        
+                        ¿Estás seguro de que quieres reiniciar el Sorteo?
+                        Al reiniciar se perderan los datos de los ganadores actuales.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Confirmar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
+@stop
+@section('css')
+<style>
+    .modal-danger{
+        color: #fff;
+        background-color: #FA3E18;
+    }
+    .modal-danger .close{
+        color: #fff;
+    }
+</style>
+@endsection
 
 @section('javascript')
     @if ($isModelTranslatable)
