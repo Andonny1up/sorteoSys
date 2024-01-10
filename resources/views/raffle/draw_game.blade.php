@@ -1,15 +1,33 @@
 @extends('base.base')
 @section('title', 'AppSorteo')
-    
+
+@section('header')
+<header>
+    <figure>
+        <img src="{{asset('img/logo_gad_beni.png')}}" alt="Logo" height="80px">
+    </figure>
+    <nav class="navbar">
+        <i class="fa fa-ticket"></i>
+        <span>{{$raffle->name}}</span>
+    </nav>
+</header>
+@endsection
+
 @section('content')
 <div class="container-fluid pt-5">
     <div class="row">
         <div class="col-12">
-            <h1 class="h3 text-center mb-4">App<strong>Sorteos</strong></h1>
+            <h1 class="h3 text-center mb-4 heading"><i class="fa fa-ticket"></i>App<strong>Sorteos</strong></h1>
         </div>
     </div>
     <div class="row">
-        <div class="col-0 col-md-4"></div>
+        <div class="col-0 col-md-4">
+            <div class="card mb-4">
+                <div class="card-per card-header pb-0">
+                    <p class="title-cd text-center"><i class="fa fa-trophy"></i> Premios</p>
+                </div>
+            </div>
+        </div>
         <div class="col-12 col-sm-6 col-md-4">
             <div class="card mb-4">
                 <div class="card-per card-header pb-0">
@@ -27,7 +45,8 @@
                     </div>
                 </div>
             </div>
-            <input id="btn-start" class="btn btn-success mt-5 mb-5" type="button" value="Comenzar">
+            <input id="btn-start" class="btn btn-success mt-5 mb-5" type="button" value="¡Comenzar!">
+            <input id="btn-stop" class="btn btn-success mt-5 mb-5" type="button" value="¡Detener!">
         </div>
         <div class="col-12 col-sm-6 col-md-4">
             <div class="card">
@@ -38,7 +57,7 @@
                         <option value="1">Elegir Ganador</option>
                     </select>
                     
-                    <input id="btn-stop" class="btn btn-primary mt-3" type="button" value="Parar">
+                    
                     <table id="part-result"class="table">
                         <thead>
                             <tr>
@@ -83,67 +102,7 @@
 @endsection
 @section('css')
 <style>
-    .card{
-        box-shadow: 0 0 5px rgba(0,0,0,0.3);
-        
-    }
-    .card-per{
-        background: rgb(19,129,48);
-        background: linear-gradient(90deg, rgba(19,129,48,1) 0%, rgba(43,214,89,1) 76%, rgba(0,255,69,1) 100%);
-    }
-    .title-cd {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #fff;
-    }
-    .title-participants{
-        font-size: 1.2rem;
-        font-weight: bold;
-        color: #fff;
-    }
-    .text-total{
-        font-size: 0.8rem;
-        color: #fff;
-    }
-    #btn-start{
-        font-size: 1.5rem;
-        font-weight: bold;
-        width: 100%;
-        border: none;
-        background-color: #0AF275;
-    }
-    #btn-start:hover{
-        background-color: #0adb6c;
-    }
-    #card-game .card-body{
-        height: 100px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .roulette{
-        width: 100%;
-        height: 50px;
-        background-color: #fff;
-        border-radius: 10px;
-        border: 1px solid #838383;
-        overflow: hidden;
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    #btn-stop{
-        font-weight: bold;
-        width: 100%;
-        border: none;
-    }
-    #select-raffle{
-        width: 100%;
-        margin-bottom: 10px;
-        padding: 5px;
-        border-radius: 5px;
-    }
+   
 </style>
 @endsection
 @section('js')
@@ -181,10 +140,12 @@
             if (data.name) {
                 $('#roulette').text(data.name);
                 var resultText = selectValue == 1 ? ' HA GANADO!' : ' HA SIDO DESCARTADO';
+                let resultTextTitle = selectValue == 1 ? 'Ganador' : 'Descartado';
                 if (intervalId) {
                     clearInterval(intervalId);
                     index = 0;
                 }
+                $('#winnerModalLabel').text(resultTextTitle);
                 $('#winnerModalBody').text(data.name + resultText);
                 $('#winnerModal').modal('show');
                 $.getJSON('/raffle/' + raffleId + '/participants/selected', function(data) {
@@ -218,6 +179,20 @@
         }
     });
 });
+
+// toggle ocultar botones comenzar y parada
+$(document).ready(function() {
+    $('#btn-start').click(function() {
+        $(this).hide();
+        $('#btn-stop').show();
+    });
+
+    $('#btn-stop').click(function() {
+        $(this).hide();
+        $('#btn-start').show();
+    });
+});
+
 </script>
 
 @endsection

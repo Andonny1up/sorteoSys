@@ -14,4 +14,8 @@ class Raffle extends Model
     {
         return $this->belongsToMany(Person::class, 'people_raffles');
     }
+    public function prizes()
+    {
+        return $this->hasMany(Prize::class);
+    }
 }
