@@ -43,6 +43,9 @@
                 <i class="glyphicon glyphicon-refresh"></i> <span class="hidden-xs hidden-sm">Reiniciar sorteo</span>
             </button>
         @endcan
+        <a href="{{ route('prizes.create',$dataTypeContent->getKey()) }}" class="btn btn-info">
+            <i class="voyager-trophy"></i> Agregar premios
+        </a>
     </div>
     @include('voyager::multilingual.language-selector')
 @stop
@@ -51,7 +54,7 @@
     
     <div class="page-content read container-fluid">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-8">
 
                 <div class="panel panel-bordered" style="padding-bottom:5px;">
                     <!-- form start -->
@@ -155,6 +158,18 @@
 
                 </div>
             </div>
+            {{-- <div class="col-md-4">
+                <div class="panel panel-bordered">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><i class="voyager-trophy"></i> Premios</h3>
+                        
+                    </div>
+                    <div class="panel-body">
+                        <a href="{{ route('prizes.create',$dataTypeContent->getKey()) }}" class="btn btn-success">Agregar premios</a>
+                        
+                    </div>
+                </div>
+            </div> --}}
         </div>
     </div>
 

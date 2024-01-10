@@ -26,6 +26,24 @@
                 <div class="card-per card-header pb-0">
                     <p class="title-cd text-center"><i class="fa fa-trophy"></i> Premios</p>
                 </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>PREMIOS</th>
+                                <th>Cantidad Restante</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($prizes_remaining as $prize)
+                                <tr>
+                                    <td>{{$prize->name}}</td>
+                                    <td style="text-align: end">{{$prize->remaining}}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         <div class="col-12 col-sm-6 col-md-4">

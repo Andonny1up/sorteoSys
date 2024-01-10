@@ -16,7 +16,10 @@ class RaffleController extends VoyagerBaseController
         $participants = $raffle->people()->get();
         $participantsSelected = $raffle->people()->wherePivot('selected', true)->withPivot('status', 'updated_at')->orderBy('pivot_updated_at', 'desc')->get();
         $total_participants = $participants->count();
-        return view('raffle.draw_game', compact(['raffle', 'participants','participantsSelected', 'total_participants']));
+
+        $prizes_remaining = $raffle->prizes()->where('remaining', '>', 0)->get();
+
+        return view('raffle.draw_game', compact(['raffle', 'participants','participantsSelected', 'total_participants','prizes_remaining']));
     }
     public function getParticipants(Raffle $raffle)
     {

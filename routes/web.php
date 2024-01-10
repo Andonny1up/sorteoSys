@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Voyager\RaffleController;
 
+use App\Http\Controllers\PrizeController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -33,10 +35,15 @@ Route::controller(RaffleController::class)->group(
     
         //para reiniciar el sorteo:
         Route::post('raffle/{raffle}/resetRaffle', 'resetRaffle')->name('raffle.resetRaffle')->middleware('auth');
+    
     }
 );
 
 
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
+
+    // añadir premios a un sorteo
+    Route::get('raffle/{raffle}/prizes/create', [PrizeController::class, 'create'])->name('prizes.create')->middleware('auth');
+    Route::post('raffle/{raffle}/prizes/store', [PrizeController::class, 'store'])->name('prizes.store')->middleware('auth');
 });
