@@ -137,6 +137,13 @@ main{
     padding: 5px;
     border-radius: 5px;
 }
+.select-red {
+    background-color: #ff3838;
+}
+
+.select-default {
+    background-color: var(--green); /* o el color que prefieras */
+}
 @media (max-width: 768px){
     header .navbar{
         display: none;

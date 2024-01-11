@@ -86,6 +86,7 @@
                             <tr>
                                 <th>Nombre</th>
                                 <th>Estado</th>
+                                <th>Premio</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -97,6 +98,11 @@
                                 @endif
                                         <td>{{$participant->name}}</td>
                                         <td>{{$participant->pivot->status}}</td>
+                                        @if ( $participant->prize )
+                                            <td>{{$participant->prize->name }}</td>
+                                        @else
+                                            <td></td>
+                                        @endif
                                     </tr>
                             @endforeach
                         </tbody>
@@ -125,7 +131,7 @@
     <div class="modal fade" id="prizeModal" tabindex="-1" aria-labelledby="prizeModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
-            <div class="modal-header">
+            <div id="header-modal-confi" class="modal-header select-red">
               <h5 class="modal-title" id="prizeModalLabel"> <i class="fa fa-trophy"></i> Iniciar Sorteo <i class="fa fa-trophy"></i></h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -138,9 +144,9 @@
                     @endforeach
                 </select>
               <label for="status" style="display: block">¿Descartar o Elegir Ganador?</label>
-              <select name="status" id="select-raffle">
-                <option value="0">Descartar Participante</option>
-                <option value="1">Elegir Ganador</option>
+              <select name="status" id="select-raffle" class="select-red">
+                <option value="0" style="background-color: #ff3838">Descartar Participante</option>
+                <option value="1" style="background-color: rgba(0,255,69,1)">Elegir Ganador</option>
               </select>
             </div>
             <div class="modal-footer">
@@ -241,11 +247,16 @@
                     tableBody.empty();
                     $.each(data, function(index, participant) {
                         var status = participant.pivot.status;
+                        if (participant.prize) {
+                            var namePrize = participant.prize.name;
+                        } else {
+                            var namePrize = '';
+                        }
                         console.log(status);
                         if (status == 'Ganador') {
-                            var row = $('<tr class="table-success">').append($('<td>').text(participant.name), $('<td>').text(status));
+                            var row = $('<tr class="table-success">').append($('<td>').text(participant.name), $('<td>').text(status), $('<td>').text(namePrize));
                         } else {
-                            var row = $('<tr class="table-danger">').append($('<td>').text(participant.name), $('<td>').text(status));
+                            var row = $('<tr class="table-danger">').append($('<td>').text(participant.name), $('<td>').text(status), $('<td>').text(namePrize));
                         }
                         
                         tableBody.append(row);
@@ -297,6 +308,17 @@ $(document).ready(function() {
         $(this).hide();
         $('#btn-start').show();
     });
+});
+
+// Cambiar el color red or green
+$('#select-raffle').change(function() {
+    if ($(this).val() == '0') {
+        $(this).removeClass('select-default').addClass('select-red');
+        $('#header-modal-confi').removeClass('select-default').addClass('select-red');
+    } else {
+        $(this).removeClass('select-red').addClass('select-default');
+        $('#header-modal-confi').removeClass('select-red').addClass('select-default');
+    }
 });
 
 </script>

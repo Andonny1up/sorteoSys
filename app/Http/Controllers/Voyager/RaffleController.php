@@ -15,7 +15,16 @@ class RaffleController extends VoyagerBaseController
     public function drawGame(Raffle $raffle)
     {
         $participants = $raffle->people()->get();
-        $participantsSelected = $raffle->people()->wherePivot('selected', true)->withPivot('status', 'updated_at')->orderBy('pivot_updated_at', 'desc')->get();
+        $participantsSelected = $raffle->people()
+            ->wherePivot('selected', true)
+            ->withPivot('status', 'updated_at','prize_id')
+            ->orderBy('pivot_updated_at', 'desc')
+            ->get();
+        // Carga el premio para cada participante seleccionado
+        foreach ($participantsSelected as $participant) {
+            $participant->prize = Prize::find($participant->pivot->prize_id);
+        }
+        
         $total_participants = $participants->count();
 
         $prizes_remaining = $raffle->prizes()->where('remaining', '>', 0)->get();
@@ -31,7 +40,15 @@ class RaffleController extends VoyagerBaseController
 
     public function getParticipantsSelected(Raffle $raffle)
     {
-        $participantsSelected = $raffle->people()->wherePivot('selected', true)->withPivot('status', 'updated_at')->orderBy('pivot_updated_at', 'desc')->get();
+        $participantsSelected = $raffle->people()
+            ->wherePivot('selected', true)
+            ->withPivot('status', 'updated_at','prize_id')
+            ->orderBy('pivot_updated_at', 'desc')
+            ->get();
+        // Carga el premio para cada participante seleccionado
+        foreach ($participantsSelected as $participant) {
+            $participant->prize = Prize::find($participant->pivot->prize_id);
+        }
         return response()->json($participantsSelected);
     }
 
