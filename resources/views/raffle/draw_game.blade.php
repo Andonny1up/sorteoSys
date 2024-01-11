@@ -115,8 +115,12 @@
     <div class="modal fade" id="winnerModal" tabindex="-1" role="dialog" aria-labelledby="winnerModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="winnerModalLabel">Ganador</h5>
+            <div id="header-modal-winner" class="modal-header card-per">
+              <h5 class="modal-title" id="winnerModalLabel" style="color: white">Ganador</h5>
+            </div>
+            <div class="container-icon">
+                <i id="icon-1" class="fa fa-ticket"></i>
+                <i id="icon-2" class="fa fa-trophy" style="color: gold; display: none;"></i>
             </div>
             <div class="modal-body" id="winnerModalBody">
               <!-- El nombre del ganador se insertará aquí -->
@@ -315,9 +319,15 @@ $('#select-raffle').change(function() {
     if ($(this).val() == '0') {
         $(this).removeClass('select-default').addClass('select-red');
         $('#header-modal-confi').removeClass('select-default').addClass('select-red');
+        $('#icon-2').hide();
+        $('#icon-1').show();
+        
     } else {
         $(this).removeClass('select-red').addClass('select-default');
         $('#header-modal-confi').removeClass('select-red').addClass('select-default');
+        
+        $('#icon-1').hide();
+        $('#icon-2').show();
     }
 });
 

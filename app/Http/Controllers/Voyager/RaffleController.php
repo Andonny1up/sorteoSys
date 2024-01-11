@@ -56,6 +56,7 @@ class RaffleController extends VoyagerBaseController
     {
         $selectState = $request->input('selectValue');
         $selectPrize = $request->input('selectPrize');
+        // dd($selectPrize);
         if ($selectState == 1) {
             $participant = $raffle->people()->wherePivot('selected', false)->wherePivot('is_winner', true)->inRandomOrder()->first();
             if (!$participant) {
@@ -74,7 +75,7 @@ class RaffleController extends VoyagerBaseController
             $status = $selectState == 1 ? 'Ganador' : 'Descartado';
 
             $pivotData = ['selected' => true, 'status' => $status,'updated_at' => now()];
-            if ($selectPrize && $selectState == 1) {
+            if ($selectPrize != "null" && $selectState == 1) {
                 $pivotData['prize_id'] = $selectPrize;
                 $prize = Prize::find($selectPrize);
                 if ($prize) {

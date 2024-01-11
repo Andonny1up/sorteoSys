@@ -144,6 +144,24 @@ main{
 .select-default {
     background-color: var(--green); /* o el color que prefieras */
 }
+.container-icon{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding-top: 2rem;
+    margin-bottom: 10px;
+}
+.container-icon i{
+    font-size: 5rem;
+    color: var(--primary);
+}
+#winnerModalBody{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
 @media (max-width: 768px){
     header .navbar{
         display: none;
