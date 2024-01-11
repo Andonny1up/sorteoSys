@@ -22,6 +22,7 @@
                                 <tr>
                                     <th>Nombre del premio</th>
                                     <th>Cantidad</th>
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -29,6 +30,18 @@
                                     <tr>
                                         <td>{{ $prize->name }}</td>
                                         <td>{{ $prize->quantity }}</td>
+                                        <td>
+                                            {{-- <form action="{{ route('prizes.destroy', ['prize' => $prize->id]) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    <i class="voyager-trash"></i> Eliminar
+                                                </button>
+                                            </form> --}}
+                                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModalPrize" data-prize="{{ $prize->id }}">
+                                                <i class="voyager-trash"></i> Eliminar
+                                            </button>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -56,4 +69,67 @@
             </div>
         </div>
     </div>
+    {{-- modal --}}
+    <div class="modal fade" id="deleteModalPrize" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirmar eliminación</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que quieres eliminar este premio?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeletePrize">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{--  --}}
+    <script src="{{ asset('jquery/jquery.min.js') }}"></script>
+    <script>
+    $(document).ready(function() {
+        var prizeId;
+
+        $('#deleteModalPrize').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget);
+            prizeId = button.data('prize');
+        });
+
+        // $('#confirmDeletePrize').click(function() {
+        //     $.ajax({
+        //         url: 'raffle/prizes/' + prizeId + '/delete',
+        //         method: 'POST',
+        //         data: {
+        //             _method: 'DELETE',
+        //             _token: '{{ csrf_token() }}'
+        //         },
+        //         success: function() {
+        //             location.reload();
+        //         }
+        //     });
+        // });
+        $('#confirmDeletePrize').click(function() {
+            $.ajax({
+                url: '/admin/raffle/prizes/' + prizeId + '/delete',
+                method: 'POST',
+                data: {
+                    _method: 'DELETE',
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function() {
+                    location.reload();
+                }
+            });
+        });
+    });
+    </script>
+@endsection
+
+@section('javascript')
+
 @endsection

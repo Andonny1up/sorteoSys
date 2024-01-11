@@ -99,6 +99,10 @@ class PrizeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        //eliminar premio
+        $prize = Prize::find($id);
+        $prize->delete();
+
+        return redirect()->route('prizes.create', $prize->raffle_id)->with('success', 'Prize deleted successfully.');
     }
 }

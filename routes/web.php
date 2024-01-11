@@ -48,4 +48,6 @@ Route::group(['prefix' => 'admin'], function () {
     // añadir premios a un sorteo
     Route::get('raffle/{raffle}/prizes/create', [PrizeController::class, 'create'])->name('prizes.create')->middleware('auth');
     Route::post('raffle/{raffle}/prizes/store', [PrizeController::class, 'store'])->name('prizes.store')->middleware('auth');
+   // eliminar premios de un sorteo
+    Route::delete('raffle/prizes/{prize}/delete', [PrizeController::class, 'destroy'])->name('prizes.destroy')->middleware('auth');
 });
