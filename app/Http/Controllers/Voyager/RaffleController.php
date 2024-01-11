@@ -52,6 +52,17 @@ class RaffleController extends VoyagerBaseController
         return response()->json($participantsSelected);
     }
 
+    // seleccionar participantes no seleccionado
+    public function getParticipantsNotSelected(Raffle $raffle)
+    {
+        $participants = $raffle->people()
+            ->wherePivot('selected', false)
+            ->get();
+
+        return response()->json($participants);
+    }
+
+
     public function selectRandomParticipant(Request $request,Raffle $raffle)
     {
         $selectState = $request->input('selectValue');

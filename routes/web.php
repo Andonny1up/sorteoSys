@@ -30,6 +30,9 @@ Route::controller(RaffleController::class)->group(
         Route::get('raffle/{raffle}/selectRandomParticipant', 'selectRandomParticipant')->name('raffle.selectRandomParticipant')->middleware('auth');
         Route::get('raffle/{raffle}/participants/selected', 'getParticipantsSelected')->name('raffle.participants.selected')->middleware('auth');
         
+        // selecionar participantes no seleccionados
+        Route::get('raffle/{raffle}/participants/notSelected', 'getParticipantsNotSelected')->name('raffle.participants.notSelected')->middleware('auth');
+
         //para añadir a todas las personas activas:
         Route::post('raffle/{raffle}/addActivePeopleToRaffle', 'addActivePeopleToRaffle')->name('raffle.addActivePeopleToRaffle')->middleware('auth');
     

@@ -196,9 +196,19 @@
     //     });
     // });
 
+    // $('#btn-start').click(function() {
+    //     // Muestra el modal en lugar de comenzar el sorteo inmediatamente
+    //     $('#prizeModal').modal('show');
+    // });
     $('#btn-start').click(function() {
-        // Muestra el modal en lugar de comenzar el sorteo inmediatamente
-        $('#prizeModal').modal('show');
+        // Realiza una consulta AJAX para verificar si aún hay participantes no seleccionados
+        $.getJSON('/raffle/' + raffleId + '/participants/notSelected', function(data) {
+            if (data.length > 0) {
+                $('#prizeModal').modal('show');
+            } else {
+                $('#roulette').text('No hay participantes.');
+            }
+        });
     });
 
     $('#confirm-selection').click(function() {
@@ -321,7 +331,7 @@ $('#select-raffle').change(function() {
         $('#header-modal-confi').removeClass('select-default').addClass('select-red');
         $('#icon-2').hide();
         $('#icon-1').show();
-        
+
     } else {
         $(this).removeClass('select-red').addClass('select-default');
         $('#header-modal-confi').removeClass('select-red').addClass('select-default');
