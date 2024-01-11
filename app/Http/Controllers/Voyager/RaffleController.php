@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController;
 use App\Models\Raffle;
 use App\Models\Person;
+use App\Models\Prize;
 
 class RaffleController extends VoyagerBaseController
 {
@@ -21,11 +22,13 @@ class RaffleController extends VoyagerBaseController
 
         return view('raffle.draw_game', compact(['raffle', 'participants','participantsSelected', 'total_participants','prizes_remaining']));
     }
+
     public function getParticipants(Raffle $raffle)
     {
         $participants = $raffle->people()->wherePivot('selected', false)->inRandomOrder()->get();
         return response()->json($participants);
     }
+
     public function getParticipantsSelected(Raffle $raffle)
     {
         $participantsSelected = $raffle->people()->wherePivot('selected', true)->withPivot('status', 'updated_at')->orderBy('pivot_updated_at', 'desc')->get();
@@ -35,6 +38,7 @@ class RaffleController extends VoyagerBaseController
     public function selectRandomParticipant(Request $request,Raffle $raffle)
     {
         $selectState = $request->input('selectValue');
+        $selectPrize = $request->input('selectPrize');
         if ($selectState == 1) {
             $participant = $raffle->people()->wherePivot('selected', false)->wherePivot('is_winner', true)->inRandomOrder()->first();
             if (!$participant) {
@@ -45,10 +49,23 @@ class RaffleController extends VoyagerBaseController
         }else{
             $participant = $raffle->people()->wherePivot('selected', false)->inRandomOrder()->first();
         }
+
         
         if ($participant) {
+
+
             $status = $selectState == 1 ? 'Ganador' : 'Descartado';
-            $raffle->people()->updateExistingPivot($participant->id, ['selected' => true, 'status' => $status,'updated_at' => now()]);
+
+            $pivotData = ['selected' => true, 'status' => $status,'updated_at' => now()];
+            if ($selectPrize && $selectState == 1) {
+                $pivotData['prize_id'] = $selectPrize;
+                $prize = Prize::find($selectPrize);
+                if ($prize) {
+                    $prize->decrement('remaining');
+                }
+            }
+
+            $raffle->people()->updateExistingPivot($participant->id,$pivotData);
         }else{
             $participant = null;
         }
@@ -100,4 +117,12 @@ class RaffleController extends VoyagerBaseController
         // Redirige o maneja el éxito como prefieras
         return redirect()->back()->with('success', 'Raffle has been reset');
     }
+
+    // funcion para traer los premios de un sorteo
+    public function getPrizes(Raffle $raffle)
+    {
+        $prizes = $raffle->prizes()->where('remaining', '>', 0)->get();
+        return response()->json($prizes);
+    }
+
 }

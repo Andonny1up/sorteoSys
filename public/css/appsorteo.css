@@ -131,7 +131,7 @@ main{
 #btn-stop:hover{
     background-color: var(--green-10);
 }
-#select-raffle{
+#select-raffle, #prize-select{
     width: 100%;
     margin-bottom: 10px;
     padding: 5px;

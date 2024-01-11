@@ -36,6 +36,8 @@ Route::controller(RaffleController::class)->group(
         //para reiniciar el sorteo:
         Route::post('raffle/{raffle}/resetRaffle', 'resetRaffle')->name('raffle.resetRaffle')->middleware('auth');
     
+        //obtener los premios de un sorteo
+        Route::get('raffle/{raffle}/prizes', 'getPrizes')->name('raffle.prizes')->middleware('auth');
     }
 );
 

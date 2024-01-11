@@ -27,7 +27,12 @@
                     <p class="title-cd text-center"><i class="fa fa-trophy"></i> Premios</p>
                 </div>
                 <div class="card-body">
-                    <table class="table">
+                    {{-- <select name="" id="">
+                        @foreach ($prizes_remaining as $prize)
+                            <option value="{{$prize->id}}">{{$prize->name}}</option>
+                        @endforeach
+                    </select> --}}
+                    <table id="table-prizes" class="table">
                         <thead>
                             <tr>
                                 <th>PREMIOS</th>
@@ -49,7 +54,7 @@
         <div class="col-12 col-sm-6 col-md-4">
             <div class="card mb-4">
                 <div class="card-per card-header pb-0">
-                    <p class="title-cd text-center">¡Presiona comenzar!</p>
+                    <p class="title-cd text-center">¡Buena Suerte!</p>
                 </div>
             </div>
             <div id="card-game" class="card">
@@ -69,11 +74,11 @@
         <div class="col-12 col-sm-6 col-md-4">
             <div class="card">
                 <div class="card-body">
-                    <select name="form-select" id="select-raffle" aria-label="Default select example">
+                    {{-- <select name="form-select" id="select-raffle" aria-label="Default select example">
                         <option value="">---Seleccionar---</option>
                         <option value="0">Descartar Participante</option>
                         <option value="1">Elegir Ganador</option>
-                    </select>
+                    </select> --}}
                     
                     
                     <table id="part-result"class="table">
@@ -115,7 +120,37 @@
             </div>
           </div>
         </div>
+    </div>
+    {{-- Modal confi sorteo --}}
+    <div class="modal fade" id="prizeModal" tabindex="-1" aria-labelledby="prizeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="prizeModalLabel"> <i class="fa fa-trophy"></i> Iniciar Sorteo <i class="fa fa-trophy"></i></h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label for="prize" style="display: block">¿Elegir Premio?</label>
+                <select name="prize" id="prize-select">
+                    <!-- llenar el select con los premios disponibles -->
+                    @foreach ($prizes_remaining as $prize)
+                        <option value="{{$prize->id}}">{{$prize->name}}</option>
+                    @endforeach
+                </select>
+              <label for="status" style="display: block">¿Descartar o Elegir Ganador?</label>
+              <select name="status" id="select-raffle">
+                <option value="0">Descartar Participante</option>
+                <option value="1">Elegir Ganador</option>
+              </select>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-primary" id="confirm-selection">OK</button>
+            </div>
+          </div>
+        </div>
       </div>
+
 </div>
 @endsection
 @section('css')
@@ -132,7 +167,38 @@
     var index = 0;
     var intervalId;
 
+
+    // $('#btn-start').click(function() {
+    //     if (intervalId) {
+    //         clearInterval(intervalId);
+    //         index = 0;
+    //     }
+    //     $.getJSON('/raffle/' + raffleId + '/participants', function(data) {
+    //         participants = data;
+    //         if (participants.length == 0) {
+    //             $('#roulette').text('No hay participantes.');
+    //             return;
+    //         }
+    //         intervalId = setInterval(function() {
+    //             $('#roulette').text(participants[index].name);
+    //             index = (index + 1) % participants.length;
+    //         }, 100);
+    //     });
+    // });
+
     $('#btn-start').click(function() {
+        // Muestra el modal en lugar de comenzar el sorteo inmediatamente
+        $('#prizeModal').modal('show');
+    });
+
+    $('#confirm-selection').click(function() {
+        // Obtiene los valores seleccionados
+        var selectPrize = $('#prize-select').val();
+        var selectValue = $('#select-raffle').val();
+
+        // Cierra el modal
+        $('#prizeModal').modal('hide');
+
         if (intervalId) {
             clearInterval(intervalId);
             index = 0;
@@ -150,10 +216,14 @@
         });
     });
 
+
     $('#btn-stop').click(function() {
         
+        // Obtiene los valores seleccionados
+        var selectPrize = $('#prize-select').val();
         var selectValue = $('#select-raffle').val();
-        $.getJSON('/raffle/' + raffleId + '/selectRandomParticipant?selectValue=' + selectValue, function(data) {
+        
+        $.getJSON('/raffle/' + raffleId + '/selectRandomParticipant?selectValue=' + selectValue + '&selectPrize=' + selectPrize, function(data) {
             console.log(data);
             if (data.name) {
                 $('#roulette').text(data.name);
@@ -194,14 +264,32 @@
         if (selectValue == 1) {
             setTimeout(startConfetti, 1000);
             setTimeout(stopConfetti, 3000); // detener la animación después de 3 segundos
+
+            $.getJSON('/raffle/' + raffleId + '/prizes', function(data) {
+            // Actualiza el select
+            var select = $('#prize-select');
+            select.empty();
+            $.each(data, function(index, prize) {
+                select.append($('<option></option>').attr('value', prize.id).text(prize.name));
+            });
+
+            // Actualiza la tabla de premios
+            var tableBody = $('#table-prizes tbody');
+            tableBody.empty();
+            $.each(data, function(index, prize) {
+                var row = $('<tr>').append($('<td>').text(prize.name), $('<td style="text-align: end">').text(prize.remaining));
+                tableBody.append(row);
+            });
+            // ...
+        });
         }
     });
 });
 
 // toggle ocultar botones comenzar y parada
 $(document).ready(function() {
-    $('#btn-start').click(function() {
-        $(this).hide();
+    $('#confirm-selection').click(function() {
+        $('#btn-start').hide();
         $('#btn-stop').show();
     });
 
