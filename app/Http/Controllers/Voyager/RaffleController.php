@@ -78,6 +78,7 @@ class RaffleController extends VoyagerBaseController
         return redirect()->back()->with('success', 'Active people added to raffle');
     }
     
+    //Para reiniciar el sorteo:
     public function resetRaffle(Raffle $raffle)
     {
         // Encuentra todas las personas del sorteo que tienen 'selected' en true
@@ -85,7 +86,15 @@ class RaffleController extends VoyagerBaseController
 
         // Actualiza 'selected' a false y 'status' a 'none' para cada persona seleccionada
         foreach ($selectedPeople as $person) {
-            $raffle->people()->updateExistingPivot($person->id, ['selected' => false, 'status' => 'none']);
+            $raffle->people()->updateExistingPivot($person->id, ['selected' => false, 'status' => 'none', 'prize_id'=>null]);
+        }
+        // Encuentra todos los premios del sorteo
+        $prizes = $raffle->prizes;
+
+        // Actualiza 'remaining' a ser igual a 'quantity' para cada premio
+        foreach ($prizes as $prize) {
+            $prize->remaining = $prize->quantity;
+            $prize->save();
         }
 
         // Redirige o maneja el éxito como prefieras
